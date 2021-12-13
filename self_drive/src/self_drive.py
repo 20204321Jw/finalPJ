@@ -8,18 +8,14 @@ from sensor_msgs.msg import LaserScan
 class SelfDrive:
     def __init__(self, publisher):
         self.publisher = publisher
-        self.count = 30
 
     def lds_callback(self, scan):
         print("scan[0]:", scan.ranges[0])
         turtle_vel = Twist()
-        if self.count < 100:
-            if scan.ranges[0] != 0:
-                turtle_vel.linear.x = 0.15
-                self.count += 1
+        if scan.ranges[0] > 0.2 or scan.ranges == 0:
+            turtle_vel.linear.x = 0.15
         else:
-            turtle_vel.linear.x = 0.0
-        turtle_vel.angular.z = 0.0
+            turtle_vel.angular.z = 0.15
         self.publisher.publish(turtle_vel)
 
 def main():
