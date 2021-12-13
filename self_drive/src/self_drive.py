@@ -1,5 +1,4 @@
-#!/home/pi/.pyenv/shims/python
-
+#!/home/pi/.pyenv/versions/py37/bin/python3
 
 import rospy
 from geometry_msgs.msg import Twist
@@ -10,12 +9,12 @@ class SelfDrive:
         self.publisher = publisher
 
     def lds_callback(self, scan):
-        print("scan[0]:", scan.ranges[0])
+        print("scan[0]:", scan.ranges[0], scan.ranges[315])
         turtle_vel = Twist()
-        if scan.ranges[0] > 0.2 or scan.ranges == 0:
+        if scan.ranges[315] < 0.2828:
+            turtle_vel.angular.z = 0.5
+        elif scan.ranges[0] > 0.2 or scan.ranges == 0:
             turtle_vel.linear.x = 0.15
-        else:
-            turtle_vel.angular.z = 0.15
         self.publisher.publish(turtle_vel)
 
 def main():
